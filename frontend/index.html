@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Undervaluation Risk Intelligence</title>
+  <link rel="stylesheet" href="./assets/css/app.css">
+</head>
+<body>
+<header class="hero">
+  <div>
+    <p class="eyebrow">Customs Valuation Analytics</p>
+    <h1>Undervaluation Risk Intelligence</h1>
+    <p>Multi-quarter PCA case prioritisation and trader history</p>
+  </div>
+  <div class="api-state"><span id="apiDot"></span><span id="apiState">Connecting...</span></div>
+</header>
+<main>
+  <section class="panel global-filter-panel">
+    <div class="filter-section">
+      <div class="panel-title">
+        <div><h2>Analysis period</h2><p>Select one or more quarters.</p></div>
+        <div class="quick-buttons">
+          <button data-range="latest">Latest</button><button data-range="four">Latest 4</button><button data-range="year">Latest year</button><button data-range="all">All</button><button data-range="clear">Clear</button>
+        </div>
+      </div>
+      <div id="quarterOptions" class="quarter-options"></div>
+      <p id="quarterSelectionText" class="selection-text"></p>
+    </div>
+    <div class="filter-section risk-section">
+      <div class="panel-title">
+        <div><h2>Case risk level</h2><p>The filter applies to Overview, Cases and selected-period Trader History.</p></div>
+        <div class="quick-buttons">
+          <button data-risk-range="all">All risk</button><button data-risk-range="high">High only</button><button data-risk-range="high-medium">High + Medium</button><button data-risk-range="clear">Clear</button>
+        </div>
+      </div>
+      <div id="riskOptions" class="risk-options">
+        <label class="risk-option"><input type="checkbox" value="High Risk" checked><span class="risk-dot high-dot"></span>High Risk</label>
+        <label class="risk-option"><input type="checkbox" value="Medium Risk" checked><span class="risk-dot medium-dot"></span>Medium Risk</label>
+        <label class="risk-option"><input type="checkbox" value="Low Risk" checked><span class="risk-dot low-dot"></span>Low Risk</label>
+      </div>
+      <p id="riskSelectionText" class="selection-text"></p>
+    </div>
+    <div class="selection-bar"><span id="globalSelectionText">Preparing filters...</span><button id="applyGlobalFilters" class="primary">Apply filters</button></div>
+  </section>
+
+  <section id="message" class="message hidden"></section>
+  <section id="loading" class="message">Loading reporting API...</section>
+
+  <div id="content" class="hidden">
+    <nav class="tabs"><button class="tab active" data-tab="overview">Overview</button><button class="tab" data-tab="cases">Cases</button><button class="tab" data-tab="traders">Trader history</button></nav>
+    <section id="overviewTab" class="tab-page">
+      <div class="kpis"><article><span>Potential cases</span><strong id="kpiCases">0</strong></article><article><span>High risk</span><strong id="kpiHigh">0</strong></article><article><span>Unique traders</span><strong id="kpiTraders">0</strong></article><article><span>Unique HS</span><strong id="kpiHS">0</strong></article><article><span>Potential value gap</span><strong id="kpiGap">E0</strong></article><article><span>Average risk score</span><strong id="kpiScore">0</strong></article></div>
+      <div class="grid3"><article class="panel"><h3>Risk distribution</h3><div id="riskChart" class="bars"></div></article><article class="panel"><h3>Benchmark method</h3><div id="methodChart" class="bars"></div></article><article class="panel"><h3>Model agreement</h3><div id="agreementChart" class="bars"></div></article></div>
+      <div class="grid2"><article class="panel"><h3>Top HS codes</h3><div class="table-wrap"><table><thead><tr><th>HS</th><th>Description</th><th>Cases</th><th>Gap</th></tr></thead><tbody id="topHSBody"></tbody></table></div></article><article class="panel"><h3>Top traders</h3><div class="table-wrap"><table><thead><tr><th>TIN</th><th>Trader</th><th>Cases</th><th>Gap</th><th></th></tr></thead><tbody id="topTraderBody"></tbody></table></div></article></div>
+    </section>
+    <section id="casesTab" class="tab-page hidden">
+      <section class="panel filters"><input id="caseSearch" placeholder="Search TIN, trader, HS or declaration"><select id="methodFilter"><option value="">All benchmark methods</option><option>CLUSTER_Q1</option><option>ORIGINAL_Q1</option></select><input id="minimumScore" type="number" min="0" max="100" value="0" placeholder="Minimum score"><button id="applyCaseFilters" class="primary">Apply case filters</button></section>
+      <section class="panel"><div class="panel-title"><div><h3>Potential cases</h3><p id="caseCount">0 records</p></div><div class="pager"><button id="previousCases">Previous</button><span id="casePage">Page 1</span><button id="nextCases">Next</button></div></div><div class="table-wrap"><table class="wide"><thead><tr><th>Quarter</th><th>Risk</th><th>Score</th><th>Trader</th><th>TIN</th><th>HS</th><th>Declaration</th><th>Unit value</th><th>Benchmark</th><th>Deviation</th><th>Gap</th><th></th></tr></thead><tbody id="caseBody"></tbody></table></div></section>
+    </section>
+    <section id="tradersTab" class="tab-page hidden">
+      <section class="panel trader-search"><div><h3>Trader history</h3><p>Selected-period results respect both the quarter and risk filters. Lifetime results remain unfiltered.</p></div><input id="traderTinInput" placeholder="Enter trader TIN"><button id="loadTrader" class="primary">Load history</button></section>
+      <section id="traderResult" class="hidden"><div class="grid2"><article class="panel"><h3>Selected-period summary</h3><div id="selectedTraderSummary" class="summary-list"></div></article><article class="panel"><h3>Lifetime summary</h3><div id="lifetimeTraderSummary" class="summary-list"></div></article></div><section class="panel"><div class="panel-title"><h3>Historical cases</h3><div class="pager"><button id="previousTrader">Previous</button><span id="traderPage">Page 1</span><button id="nextTrader">Next</button></div></div><div class="table-wrap"><table class="wide"><thead><tr><th>Quarter</th><th>Date</th><th>Declaration</th><th>HS</th><th>Unit value</th><th>Benchmark</th><th>Deviation</th><th>Gap</th><th>Score</th><th>Risk</th></tr></thead><tbody id="traderHistoryBody"></tbody></table></div></section></section>
+    </section>
+  </div>
+</main>
+<dialog id="caseDialog"><div class="dialog-head"><h2>Case details</h2><button id="closeDialog">Close</button></div><div id="caseDetail"></div></dialog>
+<script src="./assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Undervaluation Risk Intelligence</title>
+    <link
+        rel="stylesheet"
+    href="./assets/css/test-dashboard.css">
+</head>
+
+<body>
+    <header class="top-header">
+        <div class="header-content">
+            <div>
+                <p class="eyebrow">
+                    Customs Valuation Analytics
+                </p>
+
+                <h1>
+                    Undervaluation Risk Intelligence
+                </h1>
+
+                <p class="header-subtitle">
+                    Quarterly Model Results Validation
+                </p>
+            </div>
+
+            <div class="header-controls">
+                <label class="quarter-control">
+                    <span>
+                        Select Quarter
+                    </span>
+
+                    <select id="quarterFilter">
+                        <option value="">
+                            Loading available quarters...
+                        </option>
+                    </select>
+                </label>
+
+                <span id="generatedAt">
+                    Loading...
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section
+            id="loadingPanel"
+            class="status-panel"
+        >
+            Loading dashboard information...
+        </section>
+
+        <section
+            id="errorPanel"
+            class="status-panel error-panel hidden"
+        >
+        </section>
+
+        <div
+            id="dashboardContent"
+            class="hidden"
+        >
+
+            <section class="performance-panel">
+                <div>
+                    <span class="performance-label">
+                        Selected Quarter
+                    </span>
+
+                    <strong id="selectedQuarterText">
+                        -
+                    </strong>
+                </div>
+
+                <div>
+                    <span class="performance-label">
+                        JSON Size
+                    </span>
+
+                    <strong id="jsonSizeText">
+                        0 MB
+                    </strong>
+                </div>
+
+                <div>
+                    <span class="performance-label">
+                        Download
+                    </span>
+
+                    <strong id="downloadTimeText">
+                        0 ms
+                    </strong>
+                </div>
+
+                <div>
+                    <span class="performance-label">
+                        JSON Parse
+                    </span>
+
+                    <strong id="parseTimeText">
+                        0 ms
+                    </strong>
+                </div>
+
+                <div>
+                    <span class="performance-label">
+                        Rendering
+                    </span>
+
+                    <strong id="renderTimeText">
+                        0 ms
+                    </strong>
+                </div>
+
+                <div>
+                    <span class="performance-label">
+                        Total Display
+                    </span>
+
+                    <strong id="totalDisplayTimeText">
+                        0 ms
+                    </strong>
+                </div>
+            </section>
+
+            <section class="filter-panel">
+                <div class="filter-header">
+                    <div>
+                        <h2>Case Filters</h2>
+
+                        <p>
+                            These filters apply to the selected quarter.
+                        </p>
+                    </div>
+
+                    <button
+                        id="resetFiltersButton"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Reset Filters
+                    </button>
+                </div>
+
+                <div class="filter-grid">
+                    <label class="filter-field">
+                        <span>Search</span>
+
+                        <input
+                            id="searchInput"
+                            type="search"
+                            placeholder="TIN, trader, HS or declaration"
+                        >
+                    </label>
+
+                    <label class="filter-field">
+                        <span>Risk Level</span>
+
+                        <select id="riskLevelFilter">
+                            <option value="">
+                                All risk levels
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="filter-field">
+                        <span>Benchmark Method</span>
+
+                        <select id="benchmarkMethodFilter">
+                            <option value="">
+                                All methods
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="filter-field">
+                        <span>Model Agreement</span>
+
+                        <select id="modelAgreementFilter">
+                            <option value="">
+                                All model results
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="filter-field">
+                        <span>HS Code</span>
+
+                        <select id="hsFilter">
+                            <option value="">
+                                All HS codes
+                            </option>
+                        </select>
+                    </label>
+
+                    <label class="filter-field">
+                        <span>Minimum Score</span>
+
+                        <input
+                            id="minimumScoreFilter"
+                            type="number"
+                            min="0"
+                            max="100"
+                            value="0"
+                        >
+                    </label>
+                </div>
+            </section>
+
+            <section class="kpi-grid">
+                <article class="kpi-card">
+                    <span class="kpi-label">
+                        Rows Scored
+                    </span>
+
+                    <strong id="rowsScoredKpi">0</strong>
+                </article>
+
+                <article class="kpi-card accent-card">
+                    <span class="kpi-label">
+                        Potential Cases
+                    </span>
+
+                    <strong id="potentialCasesKpi">0</strong>
+                </article>
+
+                <article class="kpi-card high-risk-card">
+                    <span class="kpi-label">
+                        High Risk
+                    </span>
+
+                    <strong id="highRiskKpi">0</strong>
+                </article>
+
+                <article class="kpi-card">
+                    <span class="kpi-label">
+                        Medium Risk
+                    </span>
+
+                    <strong id="mediumRiskKpi">0</strong>
+                </article>
+
+                <article class="kpi-card">
+                    <span class="kpi-label">
+                        Low Risk
+                    </span>
+
+                    <strong id="lowRiskKpi">0</strong>
+                </article>
+
+                <article class="kpi-card value-card">
+                    <span class="kpi-label">
+                        Potential Value Gap
+                    </span>
+
+                    <strong id="valueGapKpi">E0</strong>
+                </article>
+            </section>
+
+            <section class="summary-grid">
+                <article class="summary-card">
+                    <h2>Risk Distribution</h2>
+
+                    <div
+                        id="riskDistributionChart"
+                        class="bar-chart"
+                    >
+                    </div>
+                </article>
+
+                <article class="summary-card">
+                    <h2>Model Agreement</h2>
+
+                    <div
+                        id="agreementDistributionChart"
+                        class="bar-chart"
+                    >
+                    </div>
+                </article>
+
+                <article class="summary-card">
+                    <h2>Benchmark Method</h2>
+
+                    <div
+                        id="benchmarkMethodChart"
+                        class="bar-chart"
+                    >
+                    </div>
+                </article>
+            </section>
+
+            <section class="table-card">
+                <div class="table-header">
+                    <div>
+                        <h2>Potential Cases</h2>
+
+                        <p id="caseCountText">
+                            0 cases shown
+                        </p>
+                    </div>
+
+                    <div class="pagination-controls">
+                        <button
+                            id="previousPageButton"
+                            class="secondary-button"
+                            type="button"
+                        >
+                            Previous
+                        </button>
+
+                        <span id="pageInformation">
+                            Page 1 of 1
+                        </span>
+
+                        <button
+                            id="nextPageButton"
+                            class="secondary-button"
+                            type="button"
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Risk</th>
+                                <th>Score</th>
+                                <th>Trader</th>
+                                <th>TIN</th>
+                                <th>HS</th>
+                                <th>Declaration</th>
+                                <th>Unit Value</th>
+                                <th>Final Q1</th>
+                                <th>Deviation</th>
+                                <th>Value Gap</th>
+                                <th>Method</th>
+                                <th>Agreement</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="casesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="summary-grid two-column-grid">
+                <article class="table-card">
+                    <div class="table-header">
+                        <h2>Top HS Codes</h2>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>HS</th>
+                                    <th>Description</th>
+                                    <th>Cases</th>
+                                    <th>Value Gap</th>
+                                    <th>Average Score</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="topHSTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="table-card">
+                    <div class="table-header">
+                        <h2>Top Traders</h2>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>TIN</th>
+                                    <th>Trader</th>
+                                    <th>Cases</th>
+                                    <th>HS Count</th>
+                                    <th>Value Gap</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="topTradersTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+        </div>
+    </main>
+
+    <div
+        id="caseModal"
+        class="modal hidden"
+    >
+        <div class="modal-backdrop"></div>
+
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h2 id="caseModalTitle">
+                    Case Details
+                </h2>
+
+                <button
+                    id="closeModalButton"
+                    class="close-button"
+                    type="button"
+                >
+                    ×
+                </button>
+            </div>
+
+            <div
+                id="caseModalContent"
+                class="modal-content"
+            >
+            </div>
+        </div>
+    </div>
+
+    <script src="./assets/js/test-dashboard.js"></script>
+</body>
+</html>

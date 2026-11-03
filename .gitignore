@@ -1,0 +1,109 @@
+# ============================================================
+# Secrets and local configuration
+# ============================================================
+.env
+.env.*
+!.env.example
+!.env.stage*.example
+*.pem
+*.key
+*.pfx
+*.p12
+secrets/
+
+# ============================================================
+# Customs data, analytical outputs and database extracts
+# Never commit taxpayer, trader, declaration or case data.
+# ============================================================
+data/
+input/
+output/
+exports/
+extracts/
+backups/
+frontend/data/
+*.parquet
+*.feather
+*.arrow
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.sas7bdat
+*.dta
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.bcp
+*.mdf
+*.ndf
+*.ldf
+
+# Keep approved, synthetic fixtures only.
+!tests/fixtures/
+!tests/fixtures/**
+!examples/data/
+!examples/data/**
+
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+ENV/
+
+# ============================================================
+# JavaScript and frontend tooling
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vite/
+
+# ============================================================
+# Runtime files
+# ============================================================
+logs/
+*.log
+*.tmp
+*.temp
+*.pid
+*.lock
+
+# ============================================================
+# Editors and operating systems
+# ============================================================
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# Local development backups created during iterative work
+# ============================================================
+*_backup/
+*_backup_*/
+*_before_*.py
+stage*_backend/
+stage*_reporting/
+stage*_frontend/
